@@ -1,5 +1,10 @@
 ## History
 
+- v2.1.2 February 17, 2013
+	- Dependency upgrades
+		-  `request` from 2.10.x to ~2.12.0
+		-  `bal-util` from 1.13.x to ~1.16.8
+
 - v2.1.1 August 19, 2012
 	- Degraded status messages to debug level
 
