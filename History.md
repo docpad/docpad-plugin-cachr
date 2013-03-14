@@ -1,15 +1,22 @@
 ## History
 
+- v2.1.3 March 14, 2013
+	- Repackaged
+	- Dependency upgrades
+		-  `request` ~2.12.0 to v2.16.2
+		-  `bal-util` ~1.16.8 to ~1.16.11
+
 - v2.1.2 February 17, 2013
 	- Dependency upgrades
-		-  `request` from 2.10.x to ~2.12.0
-		-  `bal-util` from 1.13.x to ~1.16.8
+		-  `request` 2.10.x to ~2.12.0
+		-  `bal-util` 1.13.x to ~1.16.8
 
 - v2.1.1 August 19, 2012
 	- Degraded status messages to debug level
 
 - v2.1.0 August 17, 2012
-	- Updated [request](https://github.com/mikeal/request) dependency from v2.9.x to v2.10.x
+	- Dependency upgrades
+		- [request](https://github.com/mikeal/request) 2.9.x to 2.10.x
 	- Added tests
 	- Added `refreshCache` option (defaults to `false`)
 	- Now halts generation until all files are cached
