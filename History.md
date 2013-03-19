@@ -1,5 +1,9 @@
 ## History
 
+- v2.1.4 March 19, 2013
+	- Dependency upgrades
+		-  `request` ~2.16.2 to v2.16.6
+
 - v2.1.3 March 14, 2013
 	- Repackaged
 	- Dependency upgrades

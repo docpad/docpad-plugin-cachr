@@ -80,6 +80,7 @@ module.exports = (BasePlugin) ->
 					else
 						# success
 						docpad.log 'debug', "Cachr fetched [#{details.sourceUrl}] to [#{details.cachePath}]"
+						
 						# write
 						balUtil.writeFile details.cachePath, body, (err) ->
 							return next(err)  # forward
