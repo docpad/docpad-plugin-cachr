@@ -25,21 +25,35 @@ module.exports = (BasePlugin) ->
 		# -----------------------------
 		# Helpers
 
+		# Set Details Extension
+		setDetailsExtension: (details,extension) ->
+			# Prepare
+			docpad = @docpad
+			docpadConfig = docpad.getConfig()
+			config = @getConfig()
+
+			# Apply
+			details.cacheFilename = "#{details.hash}.#{extension}"
+			details.cacheUrl = "#{config.urlPrefix}/#{details.hash}.#{extension}"
+			details.cachePath = pathUtil.resolve(docpadConfig.outPath, config.pathPrefix, details.cacheFilename)
+
+			# Return
+			return details
+
 		# Queue Remote Url Sync
 		# Mapped to templateData.cachr
 		# Takes a remote url and queues it for caching
 		queueRemoteUrlSync: (sourceUrl) ->
 			# Prepare
 			docpad = @docpad
-			config = @config
+			docpadConfig = docpad.getConfig()
+			config = @getConfig()
 
 			# Generate a path to return immediatly
-			name = require('crypto').createHash('md5').update(sourceUrl).digest('hex')+pathUtil.extname(sourceUrl).replace(/[\?\#].*$/,'')
-			details =
-				name: name
-				sourceUrl: sourceUrl
-				cacheUrl: "#{config.urlPrefix}/#{name}"
-				cachePath: pathUtil.resolve(docpad.config.outPath, config.pathPrefix, name)
+			details = {sourceUrl}
+			details.sourceExtension = pathUtil.extname(details.sourceUrl).replace(/[\?\#].*$/,'').substr(1)
+			details.hash = require('crypto').createHash('md5').update(details.sourceUrl).digest('hex')
+			@setDetailsExtension(details, details.sourceExtension)
 
 			# Store it for saving later
 			@urlsToCache[sourceUrl] = details
@@ -54,13 +68,15 @@ module.exports = (BasePlugin) ->
 		# next(err,details)
 		cacheRemoteUrl: (details,next) ->
 			# Prepare
+			me = @
 			docpad = @docpad
+			config = @getConfig()
 			attempt = 1
 
 			# Get the file
 			viaRequest = ->
 				# Log
-				docpad.log 'debug', "Cachr is fetching [#{details.sourceUrl}] to [#{details.cachePath}]"
+				docpad.log 'debug', "Cachr is fetching #{details.sourceUrl}"
 
 				# Fetch and Save
 				request {uri:details.sourceUrl, encoding:null}, (err, response, body) ->
@@ -68,7 +84,7 @@ module.exports = (BasePlugin) ->
 						++attempt
 						if attempt is 3
 							# give up, and delete out cachePath if it exists
-							docpad.log 'debug', "Cachr is gave up fetching [#{details.sourceUrl}] to [#{details.cachePath}]"
+							docpad.log 'debug', "Cachr is gave up fetching #{details.sourceUrl}"
 							balUtil.exists details.cachePath, (exists) ->
 								if exists
 									balUtil.unlink details.cachePath, (err2) ->
@@ -78,9 +94,15 @@ module.exports = (BasePlugin) ->
 						else
 							return viaRequest()  # try again
 					else
+						# update
+						responseLocation = response.request.uri.path or null
+						if responseLocation
+							responseExtension = pathUtil.extname(responseLocation).replace(/[\?\#].*$/,'').substr(1)
+							me.setDetailsExtension(details, responseExtension)
+
 						# success
-						docpad.log 'debug', "Cachr fetched [#{details.sourceUrl}] to [#{details.cachePath}]"
-						
+						docpad.log 'debug', "Cachr fetched #{details.sourceUrl} => #{details.cachePath}"
+
 						# write
 						balUtil.writeFile details.cachePath, body, (err) ->
 							return next(err)  # forward
@@ -135,10 +157,11 @@ module.exports = (BasePlugin) ->
 			# Prepare
 			cachr = @
 			docpad = @docpad
-			config = @config
+			docpadConfig = docpad.getConfig()
+			config = @getConfig()
 			urlsToCache = @urlsToCache
 			urlsToCacheLength = @urlsToCacheLength
-			cachrPath = pathUtil.resolve(docpad.config.outPath, config.pathPrefix)
+			cachrPath = pathUtil.resolve(docpadConfig.outPath, config.pathPrefix)
 			failures = 0
 
 			# Check

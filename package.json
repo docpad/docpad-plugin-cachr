@@ -33,7 +33,7 @@
 		"bal-util": "~1.16.11"
 	},
 	"devDependencies": {
-		"coffee-script": "~1.4.0"
+		"coffee-script": "~1.6.2"
 	},
 	"main": "./out/cachr.plugin.js",
 	"scripts": {
