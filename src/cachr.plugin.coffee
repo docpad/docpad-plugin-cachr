@@ -2,6 +2,9 @@
 module.exports = (BasePlugin) ->
 	# Requires
 	balUtil = require('bal-util')
+	safefs = require('safefs')
+	eachr = require('eachr')
+	{TaskGroup} = require('taskgroup')
 	request = require('request')
 	pathUtil = require('path')
 	fsUtil = require('fs')
@@ -69,9 +72,9 @@ module.exports = (BasePlugin) ->
 						if attempt is 3
 							# give up, and delete out cachePath if it exists
 							docpad.log 'debug', "Cachr is gave up fetching [#{details.sourceUrl}] to [#{details.cachePath}]"
-							balUtil.exists details.cachePath, (exists) ->
+							safefs.exists details.cachePath, (exists) ->
 								if exists
-									balUtil.unlink details.cachePath, (err2) ->
+									safefs.unlink details.cachePath, (err2) ->
 										return next(err)
 								else
 									return next(err)
@@ -80,9 +83,9 @@ module.exports = (BasePlugin) ->
 					else
 						# success
 						docpad.log 'debug', "Cachr fetched [#{details.sourceUrl}] to [#{details.cachePath}]"
-						
+
 						# write
-						balUtil.writeFile details.cachePath, body, (err) ->
+						safefs.writeFile details.cachePath, body, (err) ->
 							return next(err)  # forward
 
 			# Check if we should get the data from the cache or do a new request
@@ -149,18 +152,18 @@ module.exports = (BasePlugin) ->
 			docpad.log 'debug', "Cachr is caching #{urlsToCacheLength} files..."
 
 			# Ensure Path
-			balUtil.ensurePath cachrPath, (err) ->
+			safefs.ensurePath cachrPath, (err) ->
 				# Check
 				return next(err)  if err
 
 				# Async
-				tasks = new balUtil.Group (err) =>
+				tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) =>
 					docpad.log (if failures then 'warn' else 'debug'), 'Cachr finished caching', (if failures then "with #{failures} failures" else '')
 					return next()
 
 				# Store all our files to be cached
-				balUtil.each urlsToCache, (details,sourceUrl) ->
-					tasks.push (complete) ->
+				eachr urlsToCache, (details,sourceUrl) ->
+					tasks.addTask (complete) ->
 						cachr.cacheRemoteUrl details, (err) ->
 							if err
 								docpad.log 'warn', "Cachr failed to fetch: #{sourceUrl}"
@@ -169,7 +172,7 @@ module.exports = (BasePlugin) ->
 							return complete()
 
 				# Fire the tasks together
-				tasks.async()
+				tasks.run()
 
 				# Chain
 				@
