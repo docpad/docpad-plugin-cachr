@@ -1,6 +1,6 @@
 {
 	"name": "docpad-plugin-cachr",
-	"version": "2.1.6",
+	"version": "2.2.0",
 	"description": "Caches remote resources locally",
 	"homepage": "http://docpad.org/plugin/cachr",
 	"keywords": [
@@ -29,8 +29,8 @@
 		"docpad": "6.x"
 	},
 	"dependencies": {
-		"request": "~2.16.6",
-		"bal-util": "~2.0.2",
+		"request": "~2.21.0",
+		"bal-util": "~2.2.0",
 		"safefs": "~3.0.1",
 		"eachr": "~2.0.2",
 		"taskgroup": "~3.1.1"
