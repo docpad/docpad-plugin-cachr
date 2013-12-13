@@ -115,14 +115,14 @@ module.exports = (BasePlugin) ->
 
 		# Render Before
 		# Map the templateData functions
-		renderBefore: ({templateData}, next) ->
+		renderBefore: (opts, next) ->
 			# Prepare
 			cachr = @
 			@urlsToCache = {}
 			@urlsToCacheLength = 0
 
 			# Apply
-			templateData.cachr = (sourceUrl) ->
+			opts.templateData.cachr = (sourceUrl) ->
 				return cachr.queueRemoteUrlSync(sourceUrl)
 
 			# Next
@@ -134,7 +134,7 @@ module.exports = (BasePlugin) ->
 
 		# Write After
 		# Store all our files to be cached
-		writeAfter: ({templateData}, next) ->
+		writeAfter: (opts, next) ->
 			# Prepare
 			cachr = @
 			docpad = @docpad
