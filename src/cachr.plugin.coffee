@@ -1,13 +1,11 @@
 # Export Plugin
 module.exports = (BasePlugin) ->
 	# Requires
-	balUtil = require('bal-util')
 	safefs = require('safefs')
 	eachr = require('eachr')
 	{TaskGroup} = require('taskgroup')
 	request = require('request')
 	pathUtil = require('path')
-	fsUtil = require('fs')
 
 	# Define Plugin
 	class CachrPlugin extends BasePlugin
@@ -34,15 +32,16 @@ module.exports = (BasePlugin) ->
 		queueRemoteUrlSync: (sourceUrl) ->
 			# Prepare
 			docpad = @docpad
-			config = @config
+			docpadConfig = docpad.getConfig()
+			config = @getConfig()
 
 			# Generate a path to return immediatly
-			name = require('crypto').createHash('md5').update(sourceUrl).digest('hex')+pathUtil.extname(sourceUrl).replace(/[\?\#].*$/,'')
+			name = require('crypto').createHash('md5').update(sourceUrl).digest('hex') + pathUtil.extname(sourceUrl).replace(/[\?\#].*$/,'')
 			details =
 				name: name
 				sourceUrl: sourceUrl
 				cacheUrl: "#{config.urlPrefix}/#{name}"
-				cachePath: pathUtil.resolve(docpad.config.outPath, config.pathPrefix, name)
+				cachePath: pathUtil.resolve(docpadConfig.outPath, config.pathPrefix, name)
 
 			# Store it for saving later
 			@urlsToCache[sourceUrl] = details
@@ -138,10 +137,11 @@ module.exports = (BasePlugin) ->
 			# Prepare
 			cachr = @
 			docpad = @docpad
-			config = @config
+			docpadConfig = docpad.getConfig()
+			config = @getConfig()
 			urlsToCache = @urlsToCache
 			urlsToCacheLength = @urlsToCacheLength
-			cachrPath = pathUtil.resolve(docpad.config.outPath, config.pathPrefix)
+			cachrPath = pathUtil.resolve(docpadConfig.outPath, config.pathPrefix)
 			failures = 0
 
 			# Check

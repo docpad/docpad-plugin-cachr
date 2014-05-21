@@ -1,34 +1,32 @@
 # History
 
+- v2.2.1 May 21, 2014
+	- Updated dependencies
+
 - v2.2.0 June 25, 2013
-	- Dependency upgrades
+	- Updated dependencies
 
 - v2.1.6 April 5, 2013
-	- Dependency upgrades
+	- Updated dependencies
 
 - v2.1.5 April 1, 2013
-	- Dependency upgrades
+	- Updated dependencies
 
 - v2.1.4 March 19, 2013
-	- Dependency upgrades
-		-  `request` ~2.16.2 to v2.16.6
+	- Updated dependencies
 
 - v2.1.3 March 14, 2013
 	- Repackaged
-	- Dependency upgrades
-		-  `request` ~2.12.0 to v2.16.2
-		-  `bal-util` ~1.16.8 to ~1.16.11
+	- Updated dependencies
 
 - v2.1.2 February 17, 2013
-	- Dependency upgrades
-		-  `request` 2.10.x to ~2.12.0
-		-  `bal-util` 1.13.x to ~1.16.8
+	- Updated dependencies
 
 - v2.1.1 August 19, 2012
 	- Degraded status messages to debug level
 
 - v2.1.0 August 17, 2012
-	- Dependency upgrades
+	- Updated dependencies
 		- [request](https://github.com/mikeal/request) 2.9.x to 2.10.x
 	- Added tests
 	- Added `refreshCache` option (defaults to `false`)

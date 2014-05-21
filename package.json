@@ -1,6 +1,6 @@
 {
   "name": "docpad-plugin-cachr",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Caches remote resources locally",
   "homepage": "http://docpad.org/plugin/cachr",
   "keywords": [
@@ -28,14 +28,13 @@
     "node": ">=0.4"
   },
   "dependencies": {
-    "request": "~2.21.0",
-    "bal-util": "~2.2.0",
-    "safefs": "~3.0.1",
+    "request": "^2.36.0",
+    "safefs": "~3.1.1",
     "eachr": "~2.0.2",
-    "taskgroup": "~3.1.1"
+    "taskgroup": "~3.4.0"
   },
   "devDependencies": {
-    "coffee-script": "~1.6.2",
+    "coffee-script": "~1.7.1",
     "docpad": "6",
     "projectz": "~0.3.13"
   },
