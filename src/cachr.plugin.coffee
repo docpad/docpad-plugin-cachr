@@ -3,6 +3,7 @@ module.exports = (BasePlugin) ->
 	# Requires
 	safefs = require('safefs')
 	eachr = require('eachr')
+	balUtil = require('bal-util')
 	{TaskGroup} = require('taskgroup')
 	request = require('request')
 	pathUtil = require('path')
@@ -57,6 +58,7 @@ module.exports = (BasePlugin) ->
 		cacheRemoteUrl: (details,next) ->
 			# Prepare
 			docpad = @docpad
+			config = @getConfig()
 			attempt = 1
 
 			# Get the file
@@ -88,7 +90,7 @@ module.exports = (BasePlugin) ->
 							return next(err)  # forward
 
 			# Check if we should get the data from the cache or do a new request
-			if @config.refreshCache
+			if config.refreshCache
 				viaRequest()
 			else
 				# Check if we should get the data from the cache or do a new request
@@ -158,6 +160,7 @@ module.exports = (BasePlugin) ->
 
 				# Async
 				tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) =>
+					return next(err)  if err
 					docpad.log (if failures then 'warn' else 'debug'), 'Cachr finished caching', (if failures then "with #{failures} failures" else '')
 					return next()
 
