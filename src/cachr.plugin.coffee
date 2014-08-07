@@ -1,11 +1,9 @@
 # Export Plugin
 module.exports = (BasePlugin) ->
 	# Requires
-	safefs = require('safefs')
-	eachr = require('eachr')
-	balUtil = require('bal-util')
+	Feedr = require('feedr')
 	{TaskGroup} = require('taskgroup')
-	request = require('request')
+	extendr = require('extendr')
 	pathUtil = require('path')
 
 	# Define Plugin
@@ -18,10 +16,11 @@ module.exports = (BasePlugin) ->
 			refreshCache: false
 			urlPrefix: '/_docpad/plugins/cachr'
 			pathPrefix: pathUtil.join('_docpad', 'plugins', 'cachr')
+			feedrOptions: null
+			feedOptions: null
 
-		# URLs to Cache
-		urlsToCache: null  # Object
-		urlsToCacheLength: 0
+		# Tasks
+		runner: null
 
 
 		# -----------------------------
@@ -32,83 +31,30 @@ module.exports = (BasePlugin) ->
 		# Takes a remote url and queues it for caching
 		queueRemoteUrlSync: (sourceUrl) ->
 			# Prepare
+			cachr = @
 			docpad = @docpad
 			docpadConfig = docpad.getConfig()
 			config = @getConfig()
 
-			# Generate a path to return immediatly
-			name = require('crypto').createHash('md5').update(sourceUrl).digest('hex') + pathUtil.extname(sourceUrl).replace(/[\?\#].*$/,'')
-			details =
-				name: name
-				sourceUrl: sourceUrl
-				cacheUrl: "#{config.urlPrefix}/#{name}"
-				cachePath: pathUtil.resolve(docpadConfig.outPath, config.pathPrefix, name)
+			# Parse user feed options
+			feedOptions = 
+				if typeof sourceUrl is 'object'
+					sourceUrl
+				else
+					{url: sourceUrl}
+			feedOptions = extendr.extend({parse:false}, config.feedOptions, feedOptions)
+			
+			# Prepare feed
+			feed = @feedr.prepareFeed(feedOptions)
+			feed.pathUrl = "#{config.urlPrefix}/#{feed.name}"
+			feed.path = pathUtil.resolve(docpadConfig.outPath, config.pathPrefix, feed.name)
 
-			# Store it for saving later
-			@urlsToCache[sourceUrl] = details
-			@urlsToCacheLength++
+			# Start the read and queue
+			@runner.addTask (complete) ->
+				cachr.feedr.readFeed(feed, complete)
 
 			# Return the cached url
-			return details.cacheUrl
-
-
-		# Save Remote Url
-		# Store a remote url
-		# next(err,details)
-		cacheRemoteUrl: (details,next) ->
-			# Prepare
-			docpad = @docpad
-			config = @getConfig()
-			attempt = 1
-
-			# Get the file
-			viaRequest = ->
-				# Log
-				docpad.log 'debug', "Cachr is fetching [#{details.sourceUrl}] to [#{details.cachePath}]"
-
-				# Fetch and Save
-				request {uri:details.sourceUrl, encoding:null}, (err, response, body) ->
-					if err
-						++attempt
-						if attempt is 3
-							# give up, and delete out cachePath if it exists
-							docpad.log 'debug', "Cachr is gave up fetching [#{details.sourceUrl}] to [#{details.cachePath}]"
-							safefs.exists details.cachePath, (exists) ->
-								if exists
-									safefs.unlink details.cachePath, (err2) ->
-										return next(err)
-								else
-									return next(err)
-						else
-							return viaRequest()  # try again
-					else
-						# success
-						docpad.log 'debug', "Cachr fetched [#{details.sourceUrl}] to [#{details.cachePath}]"
-
-						# write
-						safefs.writeFile details.cachePath, body, (err) ->
-							return next(err)  # forward
-
-			# Check if we should get the data from the cache or do a new request
-			if config.refreshCache
-				viaRequest()
-			else
-				# Check if we should get the data from the cache or do a new request
-				balUtil.isPathOlderThan details.cachePath, 1000*60*5, (err,older) ->
-					# Check
-					return next(err)  if err
-
-					# The file doesn't exist, or exists and is old
-					if older is null or older is true
-						# Refresh
-						return viaRequest()
-					# The file exists and relatively new
-					else
-						# So we don't care
-						return next()
-
-			# Chain
-			@
+			return feed.pathUrl
 
 
 		# -----------------------------
@@ -116,18 +62,24 @@ module.exports = (BasePlugin) ->
 
 		# Render Before
 		# Map the templateData functions
-		renderBefore: (opts, next) ->
+		renderBefore: (opts) ->
 			# Prepare
 			cachr = @
-			@urlsToCache = {}
-			@urlsToCacheLength = 0
+			docpad = @docpad
+			config = @getConfig()
+
+			# Prepare runner
+			@runner ?= TaskGroup.create(concurrency:0)
+
+			# Prepare feedr
+			unless @feedr?
+				feedrOptions = extendr.extend({
+					log: docpad.log
+				}, config.feedrOptions)
+				@feedr = Feedr.create(feedrOptions)
 
 			# Apply
-			opts.templateData.cachr = (sourceUrl) ->
-				return cachr.queueRemoteUrlSync(sourceUrl)
-
-			# Next
-			next()
+			opts.templateData.cachr = @queueRemoteUrlSync.bind(@)
 
 			# Chain
 			@
@@ -136,49 +88,8 @@ module.exports = (BasePlugin) ->
 		# Write After
 		# Store all our files to be cached
 		writeAfter: (opts, next) ->
-			# Prepare
-			cachr = @
-			docpad = @docpad
-			docpadConfig = docpad.getConfig()
-			config = @getConfig()
-			urlsToCache = @urlsToCache
-			urlsToCacheLength = @urlsToCacheLength
-			cachrPath = pathUtil.resolve(docpadConfig.outPath, config.pathPrefix)
-			failures = 0
-
-			# Check
-			unless urlsToCacheLength
-				return next()
-
-			# Log
-			docpad.log 'debug', "Cachr is caching #{urlsToCacheLength} files..."
-
-			# Ensure Path
-			safefs.ensurePath cachrPath, (err) ->
-				# Check
-				return next(err)  if err
-
-				# Async
-				tasks = new TaskGroup(concurrency:0).done (err) =>
-					return next(err)  if err
-					docpad.log (if failures then 'warn' else 'debug'), 'Cachr finished caching', (if failures then "with #{failures} failures" else '')
-					return next()
-
-				# Store all our files to be cached
-				eachr urlsToCache, (details,sourceUrl) ->
-					tasks.addTask (complete) ->
-						cachr.cacheRemoteUrl details, (err) ->
-							if err
-								docpad.log 'warn', "Cachr failed to fetch: #{sourceUrl}"
-								docpad.error(err)
-								++failures
-							return complete()
-
-				# Fire the tasks together
-				tasks.run()
-
-				# Chain
-				@
+			# Ensure that all files are written before we continue
+			@runner.run().done(next)
 
 			# Chain
 			@
