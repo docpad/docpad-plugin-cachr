@@ -159,7 +159,7 @@ module.exports = (BasePlugin) ->
 				return next(err)  if err
 
 				# Async
-				tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) =>
+				tasks = new TaskGroup(concurrency:0).done (err) =>
 					return next(err)  if err
 					docpad.log (if failures then 'warn' else 'debug'), 'Cachr finished caching', (if failures then "with #{failures} failures" else '')
 					return next()
