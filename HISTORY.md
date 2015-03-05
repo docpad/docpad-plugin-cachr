@@ -1,5 +1,8 @@
 # History
 
+## v2.3.1 March 5, 2015
+- Updated dependencies
+
 ## v2.3.0 August 8, 2014
 - Rewritten to use feedr instead
 

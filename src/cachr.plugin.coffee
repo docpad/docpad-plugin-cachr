@@ -37,13 +37,13 @@ module.exports = (BasePlugin) ->
 			config = @getConfig()
 
 			# Parse user feed options
-			feedOptions = 
+			feedOptions =
 				if typeof sourceUrl is 'object'
 					sourceUrl
 				else
 					{url: sourceUrl}
 			feedOptions = extendr.extend({parse:false}, config.feedOptions, feedOptions)
-			
+
 			# Prepare feed
 			feed = @feedr.prepareFeed(feedOptions)
 			feed.pathUrl = "#{config.urlPrefix}/#{feed.name}"
