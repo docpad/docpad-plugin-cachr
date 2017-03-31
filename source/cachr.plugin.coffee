@@ -42,7 +42,11 @@ module.exports = (BasePlugin) ->
 					sourceUrl
 				else
 					{url: sourceUrl}
-			feedOptions = extendr.extend({parse:false}, config.feedOptions, feedOptions)
+			feedOptions = extendr.extend(
+				{parse:false},
+				config.feedOptions or {},
+				feedOptions or {}
+			)
 
 			# Prepare feed
 			feed = @feedr.prepareFeed(feedOptions)
@@ -75,7 +79,7 @@ module.exports = (BasePlugin) ->
 			unless @feedr?
 				feedrOptions = extendr.extend({
 					log: docpad.log
-				}, config.feedrOptions)
+				}, config.feedrOptions or {})
 				@feedr = Feedr.create(feedrOptions)
 
 			# Apply
