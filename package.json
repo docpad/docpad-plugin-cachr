@@ -1,6 +1,6 @@
 {
   "name": "docpad-plugin-cachr",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Caches remote resources locally",
   "homepage": "https://github.com/docpad/docpad-plugin-cachr",
   "license": "MIT",
@@ -42,10 +42,10 @@
   },
   "author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
-    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+    "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
   ],
   "contributors": [
-    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
+    "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
     "Zearin (https://github.com/Zearin)"
   ],
   "bugs": {
