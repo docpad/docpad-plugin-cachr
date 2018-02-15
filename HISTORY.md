@@ -1,5 +1,11 @@
 # History
 
+## v2.6.0 2018 February 16
+- Now compiled with CoffeeScript v2
+- Updated dependencies
+- Updated base files
+- Minimum node version now v4, due to dependencies
+
 ## v2.5.0 2017 April 1
 - Updated dependencies
 

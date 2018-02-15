@@ -23,11 +23,13 @@
 This [DocPad](https://docpad.org) plugin provides a template helper that will take in a remote URL, download it, and provide the local URL for you.
 
 
-## Install
+<!-- INSTALL/ -->
 
-```
-docpad install cachr
-```
+<h2>Install</h2>
+
+Install this DocPad plugin by entering <code>docpad install cachr</code> into your terminal.
+
+<!-- /INSTALL -->
 
 
 ## Usage
