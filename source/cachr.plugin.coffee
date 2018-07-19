@@ -73,7 +73,7 @@ module.exports = (BasePlugin) ->
 			config = @getConfig()
 
 			# Prepare runner
-			@runner ?= TaskGroup.create(concurrency:0)
+			@runner ?= TaskGroup.create({concurrency: 0, destroyOnceDone: false})
 
 			# Prepare feedr
 			unless @feedr?

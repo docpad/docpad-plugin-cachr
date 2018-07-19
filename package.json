@@ -1,8 +1,8 @@
 {
   "name": "docpad-plugin-cachr",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "Caches remote resources locally",
-  "homepage": "https://github.com/docpad/docpad-plugin-cachr",
+  "homepage": "ssh://git@github.com/docpad/docpad-plugin-cachr",
   "license": "MIT",
   "keywords": [
     "docpad",
@@ -47,11 +47,11 @@
     "Zearin (https://github.com/Zearin)"
   ],
   "bugs": {
-    "url": "https://github.com/docpad/docpad-plugin-cachr/issues"
+    "url": "ssh://git@github.com/docpad/docpad-plugin-cachr/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/docpad/docpad-plugin-cachr.git"
+    "url": "ssh://git@github.com/docpad/docpad-plugin-cachr.git"
   },
   "engines": {
     "node": ">=4"
@@ -95,11 +95,11 @@
     "taskgroup": "^5.0.1"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-preset-es2015": "^6.24.1",
-    "coffeelint": "^2.0.7",
-    "coffeescript": "^2.2.1",
-    "docpad": "^6.79.4",
+    "coffeelint": "^2.1.0",
+    "coffeescript": "^2.3.1",
+    "docpad": "^6.80.6",
     "projectz": "^1.4.0"
   },
   "peerDependencies": {

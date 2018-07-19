@@ -7,14 +7,13 @@ node_js:
 - '4'
 - '6'
 - '8'
-- '9'
+- '10'
 matrix:
   fast_finish: true
   allow_failures:
   - node_js: '0.8'
   - node_js: '0.10'
   - node_js: '0.12'
-  - node_js: '9'
 cache:
   directories:
   - "$HOME/.npm"
@@ -27,7 +26,7 @@ after_success:
 - eval "$(curl -fsSL https://raw.githubusercontent.com/bevry/awesome-travis/1ec050bc004d0e2161cb5286c247850d24aecc02/scripts/node-publish.bash)"
 notifications:
   slack:
-    secure: pqauwON63S+q4AF8NhBRwIPRd44Tp1HScWvUf/reTRGoBibC4iODDPq6uPk5ocU+jFIEMTC+ILJmit92PmVBO3EilCGtaQRP5Lih4UZjH0p+qUqx1/II/ohGYu5sWkxhMjcYPvw/wg///uQSjHSlK+gz0VcCh1MJFjbVCsGWo2s=
+    secure: pV1rio8E3czIBgCJdkG+vk5gcGpkMB0yluuhNhf7KWloalDpxQbYtOgS0gehgN0AX5i84f8RzbOM3uhLouFzghhFpNpKFEICCbD9qpskfDOF18R40VPDa9NMKdyn3euwHUA+vjzavium5Os7y4sLDzmPrC8NkoD9GproJyvITRQ=
   email:
     recipients:
-      secure: S+WgOoHhDKmZE9xNaZ1lE9+hYCBrTleL0xSQ56H7JNgA2BlgNu2x8Qo+7gKreUO5twSJbGOuebo3UICxIJtNJ5lGQijIHb3mYJjh3bhO1h7HgTwMp+k2WUCMhWBzjDqDUXGVA9pAmOMOvD8V+m61rSvd4iJTuOb5jc5fmU5J1b4=
+      secure: ST78+UWphtzpMOF9DdLLx0SjVzYpMV8Wd4xNk1U/o9A6nsyXCMFnjpdHl6Lo7k25gUhB/zVlzgsbHpm6GsBriha8w1/XUjS67+bViz0iiT/g56lGtTX5dtEHy6UKEDSpZvCKc3n+IXJSXRKxi/Rq+UQS8TUSlnuXzCUigKaTMm4=

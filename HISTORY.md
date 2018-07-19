@@ -1,5 +1,9 @@
 # History
 
+## v2.6.1 2018 July 20
+- Fixed `Error: Invalid run status for the TaskGroup [taskgroup 0.7603130710780412], it was [destroyed].` error on regenerations (likely introduced with v2.6.0)
+- Updated dependencies
+
 ## v2.6.0 2018 February 16
 - Now compiled with CoffeeScript v2
 - Updated dependencies
