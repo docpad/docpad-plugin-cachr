@@ -55,6 +55,9 @@ To use, simply wrap any url you want to cache locally within the exposed `@cachr
 	img src:@cachr('http://somewebsite.com/someimage.gif')
 	```
 
+
+
+
 <!-- INSTALL/ -->
 
 <h2>Install</h2>
