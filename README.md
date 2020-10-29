@@ -61,6 +61,9 @@ To use, simply wrap any url you want to cache locally within the exposed `@cachr
 
 
 
+
+
+
 <!-- INSTALL/ -->
 
 <h2>Install</h2>

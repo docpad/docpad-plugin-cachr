@@ -1,6 +1,6 @@
 {
   "name": "docpad-plugin-cachr",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "Caches remote resources locally",
   "homepage": "https://github.com/docpad/docpad-plugin-cachr",
   "license": "MIT",
@@ -91,7 +91,7 @@
         "require"
       ],
       "engines": {
-        "node": "10 || 12 || 13 || 14"
+        "node": "10 || 12 || 14 || 15"
       }
     }
   ],
@@ -99,18 +99,18 @@
   "main": "edition-esnext/index.js",
   "dependencies": {
     "docpad-baseplugin": "^1.4.0",
-    "extendr": "^5.15.0",
+    "extendr": "^5.16.0",
     "feedr": "^4.8.0",
-    "taskgroup": "^7.16.0"
+    "taskgroup": "^7.17.0"
   },
   "devDependencies": {
-    "@bevry/update-contributors": "^1.17.0",
+    "@bevry/update-contributors": "^1.18.0",
     "coffeelint": "^2.1.0",
     "coffeescript": "^2.5.1",
     "docpad": "^6.83.2",
     "docpad-plugintester": "^1.7.3",
-    "projectz": "^2.16.0",
-    "valid-directory": "^3.4.0"
+    "projectz": "^2.17.0",
+    "valid-directory": "^3.5.0"
   },
   "peerDependencies": {
     "docpad": "^6.83.2"
